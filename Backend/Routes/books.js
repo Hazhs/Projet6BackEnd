@@ -4,20 +4,12 @@ const auth = require('../middleware/auth.js');
 const multer = require('../middleware/multer-config.js');
 const BookCtrl = require('../controllers/books.js');
 
-// #######################################
-// #### Requête sans authentification ####
-// #######################################
-
-// ### Requête POST ###
-// Sign Up ('/api/auth/signup')
-// Login ('/api/auth/login')
-
 router.get('/', BookCtrl.getAllBook);
+router.post('/', auth, multer, BookCtrl.addBook);
+router.get('/bestrating', BookCtrl.bestRating);
 router.get('/:id', BookCtrl.getOneBook);
-//router.get('/bestrating', BookCtrl.bestRatedBooks);
-router.post('//id', auth, multer, BookCtrl.createBook);
-router.put('/:id', auth, BookCtrl.modifyBook);
+router.put('/:id', auth, multer, BookCtrl.modifyBook);
 router.delete('/:id', auth, BookCtrl.deleteBook);
-//router.post('/:id/rating', auth, BookCtrl.setNewRating);
+router.post('/:id/rating', auth, BookCtrl.Rating);
 
 module.exports = router;

@@ -1,5 +1,4 @@
 const express = require('express');
-//const fs = require('fs');
 const booksRoutes = require('./Routes/books.js');
 const userRoutes = require('./Routes/user.js');
 const path = require('path');
