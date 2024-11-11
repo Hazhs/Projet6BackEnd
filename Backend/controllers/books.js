@@ -1,25 +1,34 @@
 const fs = require('fs');
 const Book = require('../models/book.js');
+const path = require('path');
 
 exports.addBook = (req, res, next) => {
-  let bookObject = JSON.parse(req.body.book);
-  delete bookObject._id;
-  delete bookObject._userId;
-  const book = new Book({
-    ...bookObject,
-    userId: req.auth.userId,
-    imageUrl: `${req.protocol}://${req.get('host')}/images/${
-      req.file.filename
-    }`,
-  });
-  book
-    .save()
-    .then(() => {
-      res.status(201).json({ message: 'Livre créé' });
-    })
-    .catch((error) => {
-      res.status(400).json({ error });
+  try {
+    let bookObject = JSON.parse(req.body.book);
+    delete bookObject._id;
+    delete bookObject._userId;
+    const imgUrl = `${req.protocol}://${req.get('host')}/images/${path.basename(
+      req.file.path
+    )}`;
+    const book = new Book({
+      ...bookObject,
+      userId: req.auth.userId,
+      imageUrl: imgUrl,
     });
+    book
+      .save()
+      .then(() => {
+        res.status(201).json({ message: 'Livre créé' });
+      })
+      .catch((error) => {
+        res.status(400).json({ error });
+      });
+  } catch (error) {
+    console.error(
+      "Mauvaise requête, vérifiez que l'ensemble des éléments sont renseignés.",
+      error
+    );
+  }
 };
 
 exports.getOneBook = (req, res, next) => {
@@ -29,15 +38,16 @@ exports.getOneBook = (req, res, next) => {
 };
 
 exports.modifyBook = (req, res, next) => {
+  console.log('requête de modif reçu');
   const bookObject = req.file
     ? {
         ...JSON.parse(req.body.book),
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${
-          req.file.filename
-        }`,
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${path.basename(
+          req.file.path
+        )}`,
       }
     : { ...req.body };
-
+  console.log('req.body:', req.body);
   delete bookObject._userId;
   Book.findOne({ _id: req.params.id })
     .then((book) => {
@@ -51,7 +61,7 @@ exports.modifyBook = (req, res, next) => {
           .then(() =>
             res.status(200).json({ message: 'book has been modified' })
           )
-          .catch((error) => res.status(401).json({ error }));
+          .catch((error) => res.status(402).json({ error: 'update erroné' }));
       }
     })
     .catch((error) => res.status(401).json({ error }));
