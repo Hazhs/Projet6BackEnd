@@ -2,6 +2,8 @@ const express = require('express');
 const booksRoutes = require('./Routes/books.js');
 const userRoutes = require('./Routes/user.js');
 const path = require('path');
+require('dotenv').config();
+const MongoUrl = process.env.MONGO_URL;
 
 const app = express();
 app.use(express.json());
@@ -24,9 +26,7 @@ app.use((req, res, next) => {
 
 const mongoose = require('mongoose');
 mongoose
-  .connect(
-    'mongodb+srv://seznecalan:VbsfYfhwuPm1lsZZ@clusterhaz.mxirf.mongodb.net/?retryWrites=true&w=majority&appName=ClusterHaz'
-  )
+  .connect(MongoUrl)
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
