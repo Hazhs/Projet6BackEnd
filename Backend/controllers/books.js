@@ -61,10 +61,10 @@ exports.modifyBook = (req, res, next) => {
           .then(() =>
             res.status(200).json({ message: 'book has been modified' })
           )
-          .catch((error) => res.status(402).json({ error: 'update erroné' }));
+          .catch((error) => res.status(405).json({ error: 'update erroné' }));
       }
     })
-    .catch((error) => res.status(401).json({ error }));
+    .catch((error) => res.status(404).json({ error }));
 };
 
 exports.deleteBook = (req, res, next) => {

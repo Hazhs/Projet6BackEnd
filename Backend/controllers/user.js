@@ -12,7 +12,7 @@ exports.signup = (req, res, next) => {
       });
       user
         .save()
-        .then(() => res.status(200).json({ messag: 'Utilisateur créé !' }))
+        .then(() => res.status(200).json({ message: 'Utilisateur créé !' }))
         .catch((error) => res.status(400).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
@@ -21,6 +21,7 @@ exports.signup = (req, res, next) => {
 exports.login = (req, res, next) => {
   User.findOne({ email: req.body.email })
     .then((user) => {
+      s;
       if (!user) {
         return res
           .status(401)
